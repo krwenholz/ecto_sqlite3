@@ -1370,9 +1370,16 @@ defmodule Ecto.Adapters.SQLite3.Connection do
   end
 
   defp expr({:datetime_add, _, [datetime, count, interval]}, sources, query) do
+     fmt =Ecto.Adapters.SQLite3.Codec.datetime_format(
+      Application.get_env(
+      :ecto_sqlite3,
+      :datetime_type,
+      :iso8601
+    ))
+ 
     [
       "CAST (",
-      "strftime('%Y-%m-%d %H:%M:%f000Z'",
+      "strftime('#{fmt}'",
       ",",
       expr(datetime, sources, query),
       ",",
